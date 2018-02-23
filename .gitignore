@@ -2,5 +2,4 @@
 *.log
 /node_modules
 /data
-/prebuilt-data.json
-/prebuilt-data.csv
+/previsions-latest*
