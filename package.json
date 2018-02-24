@@ -1,9 +1,10 @@
 {
   "scripts": {
-    "build": "node lib/build",
+    "dataset:build": "node lib/dataset/build",
+    "dataset:publish": "node lib/dataset/publish",
     "lint": "xo",
-    "start": "micro",
-    "dev": "micro-dev"
+    "dev": "micro-dev",
+    "start": "micro"
   },
   "dependencies": {
     "JSONStream": "^1.3.2",
