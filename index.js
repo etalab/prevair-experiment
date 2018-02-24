@@ -1,7 +1,7 @@
 const {parse} = require('querystring')
 const {send} = require('micro')
 const {createSpatialIndex} = require('./lib/spatial')
-const {records} = require('./prebuilt-data.json')
+const {records} = require('./previsions-latest.json')
 
 /* Micro helpers */
 
