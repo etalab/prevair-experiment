@@ -1,0 +1,134 @@
+version: 2
+
+defaults:
+  workspace_root: &workspace_root
+    ~/prevair
+
+  container: &default_container
+    working_directory: *workspace_root
+    docker:
+      - image: circleci/node:8
+
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: *workspace_root
+
+  restore_node_modules: &restore_node_modules
+    restore_cache:
+      name: Restore node_modules cache
+      keys:
+        - v1-prevair-node-{{ checksum "yarn.lock" }}
+        - v1-prevair-node-
+
+jobs:
+  checkout:
+    <<: *default_container
+    steps:
+      - checkout
+
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - ./
+
+  install:
+    <<: *default_container
+    steps:
+      - *attach_workspace
+      - *restore_node_modules
+
+      - restore_cache:
+          name: Restore yarn cache
+          keys:
+            - v1-prevair-yarn-{{ checksum "yarn.lock" }}
+            - v1-prevair-yarn-
+
+      - run:
+          name: Install dependencies
+          command: yarn
+
+      - save_cache:
+          name: Save yarn cache
+          key: v1-prevair-yarn-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn/
+
+      - save_cache:
+          name: Save node_modules cache
+          key: v1-prevair-node-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules/
+
+  lint:
+    <<: *default_container
+    steps:
+      - *attach_workspace
+      - *restore_node_modules
+
+      - run:
+          name: Lint JavaScript
+          command: yarn lint
+
+  dataset_build:
+    <<: *default_container
+    steps:
+      - *attach_workspace
+      - *restore_node_modules
+
+      - run:
+          name: Build dataset
+          command: yarn dataset:build
+
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - data/
+
+  dataset_publish:
+    <<: *default_container
+    steps:
+      - *attach_workspace
+      - *restore_node_modules
+
+      - run:
+          name: Publish dataset
+          command: yarn dataset:publish
+
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - data/
+
+workflows:
+  version: 2
+
+  lint_build_publish:
+    triggers:
+      - schedule:
+          cron: "0 8 * * *"
+            filters:
+              branches:
+                only: master
+
+    jobs:
+      - checkout
+
+      - install:
+          requires:
+            - checkout
+
+      - lint:
+          requires:
+            - install
+
+      - dataset_build:
+          requires:
+            - lint
+            - install
+
+      - dataset_publish:
+          requires:
+            - dataset_build
+          filters:
+            branches:
+              only: master
