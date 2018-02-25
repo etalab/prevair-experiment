@@ -69,7 +69,7 @@ jobs:
           name: Lint JavaScript
           command: yarn lint
 
-  dataset_build:
+  dataset-build:
     <<: *default_container
     steps:
       - *attach_workspace
@@ -84,7 +84,7 @@ jobs:
           paths:
             - data/
 
-  dataset_publish:
+  dataset-publish:
     <<: *default_container
     steps:
       - *attach_workspace
@@ -121,14 +121,14 @@ workflows:
           requires:
             - install
 
-      - dataset_build:
+      - dataset-build:
           requires:
             - lint
             - install
 
-      - dataset_publish:
+      - dataset-publish:
           requires:
-            - dataset_build
+            - dataset-build
           filters:
             branches:
               only: master
