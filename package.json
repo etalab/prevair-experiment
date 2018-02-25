@@ -1,4 +1,12 @@
 {
+  "name": "@etalab/prevair",
+  "version": "0.1.0-dev",
+  "description": "Expérimentation d'API servant les prévisions qualité de l'air de PREVAIR.org",
+  "main": "index.js",
+  "repository": "git@github.com:etalab/prevair-experiment.git",
+  "author": "Jérôme Desboeufs <jerome.desboeufs@data.gouv.fr>",
+  "license": "MIT",
+  "private": false,
   "scripts": {
     "dataset:build": "node lib/dataset/build",
     "dataset:publish": "node lib/dataset/publish",
