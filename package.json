@@ -2,6 +2,7 @@
   "scripts": {
     "dataset:build": "node lib/dataset/build",
     "dataset:publish": "node lib/dataset/publish",
+    "dataset:download": "node lib/dataset/download",
     "lint": "xo",
     "dev": "micro-dev",
     "start": "micro"
