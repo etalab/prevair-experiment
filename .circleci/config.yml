@@ -102,7 +102,7 @@ jobs:
 workflows:
   version: 2
 
-  lint_build_publish:
+  lint-build-and-publish:
     triggers:
       - schedule:
           cron: "0 8 * * *"
