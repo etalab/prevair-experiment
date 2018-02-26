@@ -1,7 +1,7 @@
 const {parse} = require('querystring')
 const {send} = require('micro')
 const {createSpatialIndex} = require('./lib/spatial')
-const {records} = require('./data/previsions-latest.json')
+const {metadata, records} = require('./data/previsions-latest.json')
 
 /* Micro helpers */
 
@@ -29,5 +29,5 @@ module.exports = (req, res) => {
   }
   const result = spatialIndex.search({lon, lat})
   if (!result) return badRequest(res, 'Seule la France métropolitaine est couverte par cette API')
-  return result
+  return {date: metadata.date, ...result}
 }
