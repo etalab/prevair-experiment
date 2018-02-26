@@ -107,7 +107,7 @@ jobs:
 workflows:
   version: 2
 
-  lint-build-and-publish:
+  update-dataset:
     triggers:
       - schedule:
           cron: "0 8 * * *"
@@ -115,6 +115,22 @@ workflows:
             branches:
               only: master
 
+    jobs:
+      - checkout
+
+      - install:
+          requires:
+            - checkout
+
+      - dataset-build:
+          requires:
+            - install
+
+      - dataset-publish:
+          requires:
+            - dataset-build
+
+  lint-build:
     jobs:
       - checkout
 
@@ -130,10 +146,3 @@ workflows:
           requires:
             - lint
             - install
-
-      - dataset-publish:
-          requires:
-            - dataset-build
-          filters:
-            branches:
-              only: master
