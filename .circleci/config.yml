@@ -47,6 +47,11 @@ jobs:
           name: Install dependencies
           command: yarn
 
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - data/
+
       - save_cache:
           name: Save yarn cache
           key: v1-prevair-yarn-{{ checksum "yarn.lock" }}
