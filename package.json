@@ -21,6 +21,7 @@
     "kdbush": "^1.0.1",
     "lodash": "^4.17.5",
     "micro": "^9.1.0",
+    "micro-cors": "^0.1.0",
     "superagent": "^3.8.2"
   },
   "devDependencies": {

@@ -1,5 +1,6 @@
 const {parse} = require('querystring')
 const {send} = require('micro')
+const cors = require('micro-cors')()
 const {createSpatialIndex} = require('./lib/spatial')
 const {metadata, records} = require('./data/previsions-latest.json')
 
@@ -19,7 +20,7 @@ const spatialIndex = createSpatialIndex(records)
 
 /* API */
 
-module.exports = (req, res) => {
+module.exports = cors((req, res) => {
   const qs = extractQueryString(req)
   if (!qs.lat || !qs.lon) return badRequest(res, 'Les paramètres lat et lon sont obligatoires')
   const lat = Number.parseFloat(qs.lat)
@@ -30,4 +31,4 @@ module.exports = (req, res) => {
   const result = spatialIndex.search({lon, lat})
   if (!result) return badRequest(res, 'Seule la France métropolitaine est couverte par cette API')
   return {date: metadata.date, ...result}
-}
+})
